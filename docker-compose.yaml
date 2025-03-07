@@ -1,0 +1,33 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mariadb:/data/mariadb
+    ports:
+      - "3307:3306"
+    networks:
+      - mariadb
+    restart: unless-stopped
+
+  adminer:
+    image: adminer:latest
+    environment:
+      ADMINER_DEFAULT_SERVER: mariadb
+    ports:
+      - "8082:8080"
+    depends_on:
+      - mariadb
+    networks:
+      - mariadb
+
+networks:
+  mariadb:
+    driver: bridge
+
+volumes:
+  mariadb:
